@@ -2,7 +2,7 @@
 using Meteo.Meteo.Model;
 using Newtonsoft.Json;
 
-Console.WriteLine("Hello, World!");
+Console.WriteLine("Meteo.lt forecast! ");
 
 var httpClient = new HttpClient();
 
@@ -15,35 +15,39 @@ if (httpResponse.IsSuccessStatusCode)
 
     var contentString = await httpResponse.Content.ReadAsStringAsync();
 
-    Console.WriteLine("Please enter place");
+    Console.WriteLine("Please enter place name");
 
     string placeInput = Console.ReadLine();
 
+    string placeInputNew = char.ToUpper(placeInput.First()) + placeInput.Substring(1).ToLower();
+
     var places = JsonConvert.DeserializeObject<List<Place>>(contentString);
 
-    var filteredPlaces = places.Where(p => p.Code.Contains(placeInput));
+    var filteredPlaces = places.Where(p => p.Name.Contains(placeInputNew)).FirstOrDefault();
 
-    //foreach(var place in filteredPlaces)
-    //{
-    //    Console.WriteLine($"Vietove: {place.Name}, kodas: {place.CountryCode} Rajonas: {place.AdministrativeDivision}, Salies kodas: {place.Code}");
-    //}
 
-    httpResponse = await httpClient.GetAsync("https://api.meteo.lt/v1/places/vilnius/forecasts/long-term");
+        httpResponse = await httpClient.GetAsync($"https://api.meteo.lt/v1/places/{filteredPlaces.Code}/forecasts/long-term");
 
-    if (httpResponse.IsSuccessStatusCode)
-    {
-        contentString = await httpResponse.Content.ReadAsStringAsync();
+        if (httpResponse.IsSuccessStatusCode)
+        {
+            contentString = await httpResponse.Content.ReadAsStringAsync();
 
-     var responseDatas = JsonConvert.DeserializeObject<ResponseData>(contentString);
+            var responseDatas = JsonConvert.DeserializeObject<ResponseData>(contentString);
 
-        Console.WriteLine("Time: " + responseDatas.forecastTimestamps[1].ForecastTimeUtc);
-        Console.WriteLine("Place: " + responseDatas.Place.Name);
-        Console.WriteLine("Wheather condition: " + responseDatas.forecastTimestamps[1].ConditionCode);
-        Console.WriteLine("Temperature: " + responseDatas.forecastTimestamps[1].AirTemperature);
-        Console.WriteLine($"Temperature:{ responseDatas.forecastTimestamps[1].WindSpeed} m/s. ");
-        Console.WriteLine($"Humidity: {responseDatas.forecastTimestamps[1].RelativeHumidity}%");
-        Console.WriteLine($"Humidity: {responseDatas.forecastTimestamps[1].SeaLevelPressure} hPa");
+        for (int i = 0; i < responseDatas.forecastTimestamps.Count; i+=3)
+             {
+            Console.WriteLine();
+            Console.WriteLine("Time: " + responseDatas.forecastTimestamps[i].ForecastTimeUtc);
+            Console.WriteLine("Place: " + responseDatas.Place.Name);
+            Console.WriteLine("Wheather condition: " + responseDatas.forecastTimestamps[i].ConditionCode);
+            Console.WriteLine($"Temperature: {responseDatas.forecastTimestamps[i].AirTemperature} °C");
+            Console.WriteLine($"Temperature:{ responseDatas.forecastTimestamps[i].WindSpeed} m/s. ");
+            Console.WriteLine($"Humidity: {responseDatas.forecastTimestamps[i].RelativeHumidity}%");
+            Console.WriteLine($"Humidity: {responseDatas.forecastTimestamps[i].SeaLevelPressure} hPa");
+            Console.WriteLine();
+         }
+        }
 
-    }
+    
 }
 
