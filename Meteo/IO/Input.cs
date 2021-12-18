@@ -9,7 +9,7 @@ namespace Meteo.Meteo.IO
 {
     internal class Input
     {
-        public string GetPlace()
+        public string GetInputString()
         {
             string inputString = Console.ReadLine();
             return inputString;

@@ -2,43 +2,50 @@
 using Meteo.Meteo.Model;
 using Meteo.Meteo.IO;
 using Meteo.Meteo.Helper;
+using Meteo.Meteo.Validation;
 using Newtonsoft.Json;
 
 var Input = new Input();
-
 var StringModifier = new StringModifier(Input); 
+//var InputValidation = new InputValidation(StringModifier);
 
-Console.WriteLine("Meteo.lt forecast! ");
+
 
 var httpClient = new HttpClient();
 
 var httpResponse = await httpClient.GetAsync("https://api.meteo.lt/v1/places");
 
+
+
 // Get all places
 if (httpResponse.IsSuccessStatusCode)
 {
+    Console.WriteLine("Meteo.lt forecast! ");
+    Place filteredPlaces;
+    do
+    {
+        Console.WriteLine("Please enter place name");
 
-    var contentString = await httpResponse.Content.ReadAsStringAsync();
+        string placeInput = StringModifier.GetUppercaseFirst(Input.GetInputString());
 
-    Console.WriteLine("Please enter place name");
+        var contentString = await httpResponse.Content.ReadAsStringAsync();
 
-    // string placeInput = Console.ReadLine();
-   // string placeInput = Input.GetPlace(); 
-    string placeInput = StringModifier.GetUppercaseFirst(Input.GetPlace()); 
+        var places = JsonConvert.DeserializeObject<List<Place>>(contentString);
+
+        filteredPlaces = places.Where(p => p.Name.Contains(placeInput)).FirstOrDefault();
+
+        if (filteredPlaces == null)
+        {
+            Console.WriteLine("No such places in our database. Please try again!");
+        }
+    } while (filteredPlaces == null);
 
 
-    //string placeInputNew = char.ToUpper(placeInput.First()) + placeInput.Substring(1).ToLower();
-
-    var places = JsonConvert.DeserializeObject<List<Place>>(contentString);
-
-    var filteredPlaces = places.Where(p => p.Name.Contains(placeInput)).FirstOrDefault();
-
-
-        httpResponse = await httpClient.GetAsync($"https://api.meteo.lt/v1/places/{filteredPlaces.Code}/forecasts/long-term");
+    httpResponse = await httpClient.GetAsync($"https://api.meteo.lt/v1/places/{filteredPlaces.Code}/forecasts/long-term");
 
         if (httpResponse.IsSuccessStatusCode)
         {
-            contentString = await httpResponse.Content.ReadAsStringAsync();
+            var contentString = await httpResponse.Content.ReadAsStringAsync();
 
             var responseDatas = JsonConvert.DeserializeObject<ResponseData>(contentString);
 
