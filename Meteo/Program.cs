@@ -1,6 +1,12 @@
 ﻿
 using Meteo.Meteo.Model;
+using Meteo.Meteo.IO;
+using Meteo.Meteo.Helper;
 using Newtonsoft.Json;
+
+var Input = new Input();
+
+var StringModifier = new StringModifier(Input); 
 
 Console.WriteLine("Meteo.lt forecast! ");
 
@@ -11,19 +17,21 @@ var httpResponse = await httpClient.GetAsync("https://api.meteo.lt/v1/places");
 // Get all places
 if (httpResponse.IsSuccessStatusCode)
 {
-    Console.WriteLine(httpResponse.StatusCode.ToString());
 
     var contentString = await httpResponse.Content.ReadAsStringAsync();
 
     Console.WriteLine("Please enter place name");
 
-    string placeInput = Console.ReadLine();
+    // string placeInput = Console.ReadLine();
+   // string placeInput = Input.GetPlace(); 
+    string placeInput = StringModifier.GetUppercaseFirst(Input.GetPlace()); 
 
-    string placeInputNew = char.ToUpper(placeInput.First()) + placeInput.Substring(1).ToLower();
+
+    //string placeInputNew = char.ToUpper(placeInput.First()) + placeInput.Substring(1).ToLower();
 
     var places = JsonConvert.DeserializeObject<List<Place>>(contentString);
 
-    var filteredPlaces = places.Where(p => p.Name.Contains(placeInputNew)).FirstOrDefault();
+    var filteredPlaces = places.Where(p => p.Name.Contains(placeInput)).FirstOrDefault();
 
 
         httpResponse = await httpClient.GetAsync($"https://api.meteo.lt/v1/places/{filteredPlaces.Code}/forecasts/long-term");
