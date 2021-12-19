@@ -34,7 +34,6 @@ if (httpResponse.IsSuccessStatusCode)
             inputString = Input.GetInputString();
         }
 
-
         string placeInput = StringModifier.GetUppercaseFirst(inputString);
 
         var contentString = await httpResponse.Content.ReadAsStringAsync();
@@ -58,29 +57,14 @@ if (httpResponse.IsSuccessStatusCode)
 
         var responseDatas = JsonConvert.DeserializeObject<ResponseData>(contentString);
 
-        Console.WriteLine("Please chose your forecast:\n 1 = For 5 days in a row \n 2 = Today \n 3 = Tomorow \n 4 = Day after tomorow");
+        Console.WriteLine("Please chose your forecast:\n 1 = Today \n 2 = Tomorow  \n 3 = Day after tomorow \n 4 = For 5 days in a row");
 
         string SwitchInput = Input.GetInputString();
 
         switch (SwitchInput)
         {
             case "1":
-                // GET FORECAST FOR 5 DAYS
-                for (int i = 0; i < responseDatas.forecastTimestamps.Count; i += 4)
-                {
-                    Console.WriteLine();
-                    Console.WriteLine("Time: " + responseDatas.forecastTimestamps[i].ForecastTimeUtc);
-                    Console.WriteLine("Place: " + responseDatas.Place.Name);
-                    Console.WriteLine("Wheather condition: " + responseDatas.forecastTimestamps[i].ConditionCode);
-                    Console.WriteLine($"Temperature: {responseDatas.forecastTimestamps[i].AirTemperature} °C");
-                    Console.WriteLine($"Temperature:{ responseDatas.forecastTimestamps[i].WindSpeed} m/s. ");
-                    Console.WriteLine($"Humidity: {responseDatas.forecastTimestamps[i].RelativeHumidity}%");
-                    Console.WriteLine($"Humidity: {responseDatas.forecastTimestamps[i].SeaLevelPressure} hPa");
-                    Console.WriteLine();
-                }
-                 break;
-
-            case "2":
+                // GET FORECAST FOR TODAY
                 var currentDate = DateOnly.FromDateTime(DateTime.Now).ToString();
                 for (int i = 0; i < responseDatas.forecastTimestamps.Count; i += 4)
                 {
@@ -96,6 +80,62 @@ if (httpResponse.IsSuccessStatusCode)
                         Console.WriteLine($"Humidity: {responseDatas.forecastTimestamps[i].SeaLevelPressure} hPa");
                         Console.WriteLine();
                     }
+                }
+                break;
+
+            case "2":
+                // GET FORECAST FOR TOMOROW
+                var tomorowDate = DateOnly.FromDateTime(DateTime.Now.AddDays(1)).ToString();
+                for (int i = 0; i < responseDatas.forecastTimestamps.Count; i += 4)
+                {
+                    if (tomorowDate == responseDatas.forecastTimestamps[i].ForecastTimeUtc.Substring(0, 10))
+                    {
+                        Console.WriteLine();
+                        Console.WriteLine("Time: " + responseDatas.forecastTimestamps[i].ForecastTimeUtc);
+                        Console.WriteLine("Place: " + responseDatas.Place.Name);
+                        Console.WriteLine("Wheather condition: " + responseDatas.forecastTimestamps[i].ConditionCode);
+                        Console.WriteLine($"Temperature: {responseDatas.forecastTimestamps[i].AirTemperature} °C");
+                        Console.WriteLine($"Temperature:{ responseDatas.forecastTimestamps[i].WindSpeed} m/s. ");
+                        Console.WriteLine($"Humidity: {responseDatas.forecastTimestamps[i].RelativeHumidity}%");
+                        Console.WriteLine($"Humidity: {responseDatas.forecastTimestamps[i].SeaLevelPressure} hPa");
+                        Console.WriteLine();
+                    }
+                }
+                break;
+
+            case "3":
+                // GET FORECAST FOR TOMOROW
+                var dateAfterTomorow = DateOnly.FromDateTime(DateTime.Now.AddDays(2)).ToString();
+                for (int i = 0; i < responseDatas.forecastTimestamps.Count; i += 5)
+                {
+                    if (dateAfterTomorow == responseDatas.forecastTimestamps[i].ForecastTimeUtc.Substring(0, 10))
+                    {
+                        Console.WriteLine();
+                        Console.WriteLine("Time: " + responseDatas.forecastTimestamps[i].ForecastTimeUtc);
+                        Console.WriteLine("Place: " + responseDatas.Place.Name);
+                        Console.WriteLine("Wheather condition: " + responseDatas.forecastTimestamps[i].ConditionCode);
+                        Console.WriteLine($"Temperature: {responseDatas.forecastTimestamps[i].AirTemperature} °C");
+                        Console.WriteLine($"Temperature:{ responseDatas.forecastTimestamps[i].WindSpeed} m/s. ");
+                        Console.WriteLine($"Humidity: {responseDatas.forecastTimestamps[i].RelativeHumidity}%");
+                        Console.WriteLine($"Humidity: {responseDatas.forecastTimestamps[i].SeaLevelPressure} hPa");
+                        Console.WriteLine();
+                    }
+                }
+                break;
+
+            case "4":
+                // GET FORECAST FOR 5 DAYS
+                for (int i = 0; i < responseDatas.forecastTimestamps.Count; i += 4)
+                {
+                    Console.WriteLine();
+                    Console.WriteLine("Time: " + responseDatas.forecastTimestamps[i].ForecastTimeUtc);
+                    Console.WriteLine("Place: " + responseDatas.Place.Name);
+                    Console.WriteLine("Wheather condition: " + responseDatas.forecastTimestamps[i].ConditionCode);
+                    Console.WriteLine($"Temperature: {responseDatas.forecastTimestamps[i].AirTemperature} °C");
+                    Console.WriteLine($"Temperature:{ responseDatas.forecastTimestamps[i].WindSpeed} m/s. ");
+                    Console.WriteLine($"Humidity: {responseDatas.forecastTimestamps[i].RelativeHumidity}%");
+                    Console.WriteLine($"Humidity: {responseDatas.forecastTimestamps[i].SeaLevelPressure} hPa");
+                    Console.WriteLine();
                 }
                 break;
         }   
