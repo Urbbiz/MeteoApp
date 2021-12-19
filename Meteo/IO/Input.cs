@@ -12,6 +12,7 @@ namespace Meteo.Meteo.IO
         public string GetInputString()
         {
             string inputString = Console.ReadLine();
+            
             return inputString;
         }
     }

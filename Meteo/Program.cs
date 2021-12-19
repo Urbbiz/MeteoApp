@@ -6,15 +6,14 @@ using Meteo.Meteo.Validation;
 using Newtonsoft.Json;
 
 var Input = new Input();
+
+var InputValidation = new InputValidation(Input);
+
 var StringModifier = new StringModifier(Input); 
-//var InputValidation = new InputValidation(StringModifier);
-
-
 
 var httpClient = new HttpClient();
 
 var httpResponse = await httpClient.GetAsync("https://api.meteo.lt/v1/places");
-
 
 
 // Get all places
@@ -26,7 +25,17 @@ if (httpResponse.IsSuccessStatusCode)
     {
         Console.WriteLine("Please enter place name");
 
-        string placeInput = StringModifier.GetUppercaseFirst(Input.GetInputString());
+        string inputString = Input.GetInputString();
+
+        while (InputValidation.IsOnlyLetters(inputString) == false)
+        {
+            Console.WriteLine("Only letters are allowed. try again!");
+
+            inputString = Input.GetInputString();
+        }
+       
+
+        string placeInput = StringModifier.GetUppercaseFirst(inputString);
 
         var contentString = await httpResponse.Content.ReadAsStringAsync();
 
@@ -41,6 +50,7 @@ if (httpResponse.IsSuccessStatusCode)
     } while (filteredPlaces == null);
 
 
+    // GET FORECAST FOR 5 DAYS
     httpResponse = await httpClient.GetAsync($"https://api.meteo.lt/v1/places/{filteredPlaces.Code}/forecasts/long-term");
 
         if (httpResponse.IsSuccessStatusCode)
