@@ -8,7 +8,7 @@ using Meteo.Meteo.IO;
 
 namespace Meteo.Meteo.Validation
 {
-    internal class InputValidation
+    internal class InputValidation : IInputValidation
     {
         public InputValidation(Input input)
         {
@@ -21,7 +21,7 @@ namespace Meteo.Meteo.Validation
             if (!Regex.IsMatch(input, @"^[a-zA-Z]+$"))
             {
                 return false;
-            } else
+            }else
 
                 return Regex.IsMatch(input, @"^[a-zA-Z]+$");
         }
@@ -32,8 +32,8 @@ namespace Meteo.Meteo.Validation
             {
                 return false;
             }else
-           
-                return Regex.IsMatch(input, "^[0-4]$");
+            
+                return Regex.IsMatch(input, "^[0-4]$");  
         }
     }
 }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Meteo.Meteo.Helper
 {
-    internal static class Message
+    internal static class Message 
     {
      public static string welcome = "Welcome to Meteo.lt forecast app!";
 
@@ -16,8 +16,8 @@ namespace Meteo.Meteo.Helper
 
      public static string placeInvalid = "No such places in our database. Please try again!";
 
-     public static string switchOptions = "Please chose your forecast:\n 1 = Today \n 2 = Tomorow" +
-                                         " \n 3 = Day after tomorow \n 4 = For 5 days in a row";
+     public static string switchOptions = "Please chose your forecast:\n 1 = Today \n 2 = Tomorrow" +
+                                         " \n 3 = Day after tomorrow \n 4 = For 5 days in a row";
 
      public static string switchInputInvalid = "Only number range 1-4 are allowed. try again!";
     }

@@ -7,7 +7,7 @@ using Meteo.Meteo.Helper;
 
 namespace Meteo.Meteo.IO
 {
-    internal class Input
+    internal class Input : IInput
     {
         public string GetInputString()
         {
