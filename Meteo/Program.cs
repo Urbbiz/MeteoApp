@@ -59,9 +59,16 @@ if (httpResponse.IsSuccessStatusCode)
 
         Console.WriteLine("Please chose your forecast:\n 1 = Today \n 2 = Tomorow  \n 3 = Day after tomorow \n 4 = For 5 days in a row");
 
-        string SwitchInput = Input.GetInputString();
+        string switchInput = Input.GetInputString();
 
-        switch (SwitchInput)
+        while (InputValidation.IsNumberRange1To4(switchInput) == false)
+        {
+            Console.WriteLine("Only number range 1-4 are allowed. try again!");
+
+            switchInput = Input.GetInputString();
+        }
+
+        switch (switchInput)
         {
             case "1":
                 // GET FORECAST FOR TODAY
@@ -75,9 +82,9 @@ if (httpResponse.IsSuccessStatusCode)
                         Console.WriteLine("Place: " + responseDatas.Place.Name);
                         Console.WriteLine("Wheather condition: " + responseDatas.forecastTimestamps[i].ConditionCode);
                         Console.WriteLine($"Temperature: {responseDatas.forecastTimestamps[i].AirTemperature} °C");
-                        Console.WriteLine($"Temperature:{ responseDatas.forecastTimestamps[i].WindSpeed} m/s. ");
+                        Console.WriteLine($"Wind speed:{ responseDatas.forecastTimestamps[i].WindSpeed} m/s. ");
                         Console.WriteLine($"Humidity: {responseDatas.forecastTimestamps[i].RelativeHumidity}%");
-                        Console.WriteLine($"Humidity: {responseDatas.forecastTimestamps[i].SeaLevelPressure} hPa");
+                        Console.WriteLine($"Pressure: {responseDatas.forecastTimestamps[i].SeaLevelPressure} hPa");
                         Console.WriteLine();
                     }
                 }
@@ -95,9 +102,9 @@ if (httpResponse.IsSuccessStatusCode)
                         Console.WriteLine("Place: " + responseDatas.Place.Name);
                         Console.WriteLine("Wheather condition: " + responseDatas.forecastTimestamps[i].ConditionCode);
                         Console.WriteLine($"Temperature: {responseDatas.forecastTimestamps[i].AirTemperature} °C");
-                        Console.WriteLine($"Temperature:{ responseDatas.forecastTimestamps[i].WindSpeed} m/s. ");
+                        Console.WriteLine($"Wind speed:{ responseDatas.forecastTimestamps[i].WindSpeed} m/s. ");
                         Console.WriteLine($"Humidity: {responseDatas.forecastTimestamps[i].RelativeHumidity}%");
-                        Console.WriteLine($"Humidity: {responseDatas.forecastTimestamps[i].SeaLevelPressure} hPa");
+                        Console.WriteLine($"Pressure: {responseDatas.forecastTimestamps[i].SeaLevelPressure} hPa");
                         Console.WriteLine();
                     }
                 }
@@ -115,9 +122,9 @@ if (httpResponse.IsSuccessStatusCode)
                         Console.WriteLine("Place: " + responseDatas.Place.Name);
                         Console.WriteLine("Wheather condition: " + responseDatas.forecastTimestamps[i].ConditionCode);
                         Console.WriteLine($"Temperature: {responseDatas.forecastTimestamps[i].AirTemperature} °C");
-                        Console.WriteLine($"Temperature:{ responseDatas.forecastTimestamps[i].WindSpeed} m/s. ");
+                        Console.WriteLine($"Wind speed:{ responseDatas.forecastTimestamps[i].WindSpeed} m/s. ");
                         Console.WriteLine($"Humidity: {responseDatas.forecastTimestamps[i].RelativeHumidity}%");
-                        Console.WriteLine($"Humidity: {responseDatas.forecastTimestamps[i].SeaLevelPressure} hPa");
+                        Console.WriteLine($"Pressure: {responseDatas.forecastTimestamps[i].SeaLevelPressure} hPa");
                         Console.WriteLine();
                     }
                 }
@@ -132,9 +139,9 @@ if (httpResponse.IsSuccessStatusCode)
                     Console.WriteLine("Place: " + responseDatas.Place.Name);
                     Console.WriteLine("Wheather condition: " + responseDatas.forecastTimestamps[i].ConditionCode);
                     Console.WriteLine($"Temperature: {responseDatas.forecastTimestamps[i].AirTemperature} °C");
-                    Console.WriteLine($"Temperature:{ responseDatas.forecastTimestamps[i].WindSpeed} m/s. ");
+                    Console.WriteLine($"Wind speed:{ responseDatas.forecastTimestamps[i].WindSpeed} m/s. ");
                     Console.WriteLine($"Humidity: {responseDatas.forecastTimestamps[i].RelativeHumidity}%");
-                    Console.WriteLine($"Humidity: {responseDatas.forecastTimestamps[i].SeaLevelPressure} hPa");
+                    Console.WriteLine($"Pressure: {responseDatas.forecastTimestamps[i].SeaLevelPressure} hPa");
                     Console.WriteLine();
                 }
                 break;

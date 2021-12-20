@@ -25,5 +25,15 @@ namespace Meteo.Meteo.Validation
 
                 return Regex.IsMatch(input, @"^[a-zA-Z]+$");
         }
+
+        public bool? IsNumberRange1To4(string input)
+        {
+            if (!Regex.IsMatch(input, "^[0-4]$") )
+            {
+                return false;
+            }else
+           
+                return Regex.IsMatch(input, "^[0-4]$");
+        }
     }
 }
