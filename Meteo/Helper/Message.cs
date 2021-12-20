@@ -8,7 +8,17 @@ namespace Meteo.Meteo.Helper
 {
     internal static class Message
     {
+     public static string welcome = "Welcome to Meteo.lt forecast app!";
 
-     public static string ahahaha = "Wheather condition: responseDatas.forecastTimestamps[i].ConditionCode";
+     public static string enterPlace = "Please enter place name";
+
+     public static string onlyLettersValid = "Only letters are allowed. try again!";
+
+     public static string placeInvalid = "No such places in our database. Please try again!";
+
+     public static string switchOptions = "Please chose your forecast:\n 1 = Today \n 2 = Tomorow" +
+                                         " \n 3 = Day after tomorow \n 4 = For 5 days in a row";
+
+     public static string switchInputInvalid = "Only number range 1-4 are allowed. try again!";
     }
 }

@@ -18,17 +18,19 @@ var httpResponse = await httpClient.GetAsync("https://api.meteo.lt/v1/places");
 // Get all places
 if (httpResponse.IsSuccessStatusCode)
 {
-    Console.WriteLine("Meteo.lt forecast! ");
+    Console.WriteLine(Message.welcome);
+
     Place filteredPlaces;
+
     do
     {
-        Console.WriteLine("Please enter place name");
+        Console.WriteLine(Message.enterPlace);
 
         string inputString = Input.GetInputString();
 
         while (InputValidation.IsOnlyLetters(inputString) == false)
         {
-            Console.WriteLine("Only letters are allowed. try again!");
+            Console.WriteLine(Message.onlyLettersValid);
 
             inputString = Input.GetInputString();
         }
@@ -43,8 +45,9 @@ if (httpResponse.IsSuccessStatusCode)
 
         if (filteredPlaces == null)
         {
-            Console.WriteLine("No such places in our database. Please try again!");
+            Console.WriteLine(Message.placeInvalid);
         }
+
     } while (filteredPlaces == null);
 
     httpResponse = await httpClient.GetAsync($"https://api.meteo.lt/v1/places/{filteredPlaces.Code}/forecasts/long-term");
@@ -55,13 +58,13 @@ if (httpResponse.IsSuccessStatusCode)
 
         var responseDatas = JsonConvert.DeserializeObject<ResponseData>(contentString);
 
-        Console.WriteLine("Please chose your forecast:\n 1 = Today \n 2 = Tomorow  \n 3 = Day after tomorow \n 4 = For 5 days in a row");
+        Console.WriteLine(Message.switchOptions);
 
         string switchInput = Input.GetInputString();
         
         while (InputValidation.IsNumberRange1To4(switchInput) == false)
         {
-            Console.WriteLine("Only number range 1-4 are allowed. try again!");
+            Console.WriteLine(Message.switchInputInvalid);
 
             switchInput = Input.GetInputString();
         }
