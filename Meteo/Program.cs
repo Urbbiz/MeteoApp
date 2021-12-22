@@ -16,48 +16,34 @@ var httpClient = new HttpClient();
 
 var httpResponse = await httpClient.GetAsync("https://api.meteo.lt/v1/places");
 
-
-
-// Get all places
-if (httpResponse.IsSuccessStatusCode)
-{
-    Console.WriteLine(Message.welcome);
-
-    Place filteredPlaces;
+    Place place;
 
     do
     {
-        Console.WriteLine(Message.enterPlace);
+    Console.WriteLine(Message.welcome);
+    Console.WriteLine(Message.enterPlace);
 
-        string inputString = Input.GetInputString();
+    string? inputString = Input.GetInputString();
         
+    while (inputValidation.IsOnlyLetters(inputString) == false)
+    {
+        Console.WriteLine(Message.onlyLettersValid);
 
-        while (inputValidation.IsOnlyLetters(inputString) == false)
-        {
-            Console.WriteLine(Message.onlyLettersValid);
-
-            inputString = Input.GetInputString();
+        inputString = Input.GetInputString();
         }
        
+    string placeInput = inputString.GetUppercaseFirst();
 
-        string placeInput = inputString.GetUppercaseFirst();
+    place = await meteoService.GetPlaceByName(placeInput);
 
-        var place = await meteoService.GetPlaceByName(placeInput);
+    if(place == null)
+    {
+       Console.WriteLine(Message.placeInvalid);
+    }
 
-        var contentString = await httpResponse.Content.ReadAsStringAsync();
+    } while (place == null);
 
-        var places = JsonConvert.DeserializeObject<List<Place>>(contentString);
-
-        filteredPlaces = places.Where(p => p.Name.Contains(placeInput)).FirstOrDefault();
-
-        if (filteredPlaces == null)
-        {
-            Console.WriteLine(Message.placeInvalid);
-        }
-
-    } while (filteredPlaces == null);
-
-    httpResponse = await httpClient.GetAsync($"https://api.meteo.lt/v1/places/{filteredPlaces.Code}/forecasts/long-term");
+    httpResponse = await httpClient.GetAsync($"https://api.meteo.lt/v1/places/{place.Code}/forecasts/long-term");
 
     if (httpResponse.IsSuccessStatusCode)
     {
@@ -126,7 +112,7 @@ if (httpResponse.IsSuccessStatusCode)
             }
         }
     }    
-}
+//}
 
 
 

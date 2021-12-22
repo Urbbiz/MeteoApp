@@ -11,7 +11,7 @@ namespace Meteo.Meteo.Model
     public class PlaceForecast
     {
          public Place? Place { get; set; }
-        public List<ForecastTimestamps>? forecastTimestamps{ get; set; }
+        public List<ForecastTimestamp>? forecastTimestamps{ get; set; }
         public string? ForecastType { get; set; }
         public string? ForecastCreationTimeUtc { get; set; }
 

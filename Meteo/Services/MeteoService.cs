@@ -12,8 +12,7 @@ namespace Meteo.Meteo.Services
     {
         private readonly HttpClient _httpClient;
         private const string PlacesUrl = "https://api.meteo.lt/v1/places/";
-        private const string NameString ="Vilnius";
-
+    
         public MeteoService()
         {
             _httpClient = new HttpClient();

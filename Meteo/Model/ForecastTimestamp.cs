@@ -8,7 +8,7 @@ using System.Text.Json.Serialization;
 
 namespace Meteo.Meteo.Model
 {
-    public class ForecastTimestamps
+    public class ForecastTimestamp
     {
         
         public string? ForecastTimeUtc { get; set; }
