@@ -10,30 +10,19 @@ namespace Meteo.Meteo.Validation
 {
     internal class InputValidation : IInputValidation
     {
-        public InputValidation(Input input)
+     
+        public bool? IsOnlyLetters( string? input)
         {
-
-        }
-
-        public bool? IsOnlyLetters( string input)
-        {
-
-            if (!Regex.IsMatch(input, @"^[a-zA-Z]+$"))
-            {
-                return false;
-            }else
 
                 return Regex.IsMatch(input, @"^[a-zA-Z]+$");
+
         }
 
-        public bool? IsNumberRange1To4(string input)
+        public bool? IsNumberRange1To4(string? input)
         {
-            if (!Regex.IsMatch(input, "^[0-4]$") )
-            {
-                return false;
-            }else
-            
+
                 return Regex.IsMatch(input, "^[0-4]$");  
+
         }
     }
 }

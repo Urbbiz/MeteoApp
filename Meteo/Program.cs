@@ -4,19 +4,16 @@ using Meteo.Meteo.IO;
 using Meteo.Meteo.Helper;
 using Meteo.Meteo.Validation;
 using Meteo.Meteo.Services;
-using Newtonsoft.Json;
 
 var Input = new Input();
 
-var inputValidation = new InputValidation(Input);
+var inputValidation = new InputValidation();
 
 var meteoService = new MeteoService();
 
-var httpClient = new HttpClient();
+ Place? place;
 
-var httpResponse = await httpClient.GetAsync("https://api.meteo.lt/v1/places");
-
-    Place place;
+ PlaceForecast? placeForecast;
 
     do
     {
@@ -43,17 +40,12 @@ var httpResponse = await httpClient.GetAsync("https://api.meteo.lt/v1/places");
 
     } while (place == null);
 
-    httpResponse = await httpClient.GetAsync($"https://api.meteo.lt/v1/places/{place.Code}/forecasts/long-term");
-
-    if (httpResponse.IsSuccessStatusCode)
-    {
-        var contentString = await httpResponse.Content.ReadAsStringAsync();
-
-        var responseDatas = JsonConvert.DeserializeObject<PlaceForecast>(contentString);
-
+        
+        placeForecast = await meteoService.GetPlaceForecast(place);
+    
         Console.WriteLine(Message.switchOptions);
 
-        string switchInput = Input.GetInputString();
+        string? switchInput = Input.GetInputString();
         
         while (inputValidation.IsNumberRange1To4(switchInput) == false)
         {
@@ -62,15 +54,17 @@ var httpResponse = await httpClient.GetAsync("https://api.meteo.lt/v1/places");
             switchInput = Input.GetInputString();
         }
 
-        for (int i = 0; i < responseDatas.forecastTimestamps.Count; i += 4)   
+        for (int i = 0; i < placeForecast.forecastTimestamps.Count; i += 4)   
         {
-            string forecastMessage = $"\nTime:{ responseDatas.forecastTimestamps[i].ForecastTimeUtc}\n" +
-                $"Place:{responseDatas.Place.Name} \n" +
-                $"Wheather condition:{responseDatas.forecastTimestamps[i].ConditionCode} \n" +
-                $"Temperature: { responseDatas.forecastTimestamps[i].AirTemperature} °C \n" +
-                $"Wind speed:{ responseDatas.forecastTimestamps[i].WindSpeed} m/s. \n" +
-                $"Humidity: {responseDatas.forecastTimestamps[i].RelativeHumidity}% \n" +
-                $"Pressure: {responseDatas.forecastTimestamps[i].SeaLevelPressure} hPa";
+            string forecastTimeStamp = placeForecast.forecastTimestamps[i].ForecastTimeUtc.Substring(0, 10);
+
+            string forecastMessage = $"\nTime:{ placeForecast.forecastTimestamps[i].ForecastTimeUtc}\n" +
+                $"Place:{placeForecast.Place.Name} \n" +
+                $"Wheather condition:{placeForecast.forecastTimestamps[i].ConditionCode} \n" +
+                $"Temperature: {placeForecast.forecastTimestamps[i].AirTemperature} °C \n" +
+                $"Wind speed:{placeForecast.forecastTimestamps[i].WindSpeed} m/s. \n" +
+                $"Humidity: {placeForecast.forecastTimestamps[i].RelativeHumidity}% \n" +
+                $"Pressure: {placeForecast.forecastTimestamps[i].SeaLevelPressure} hPa";
 
             switch (switchInput)
             {
@@ -78,7 +72,7 @@ var httpResponse = await httpClient.GetAsync("https://api.meteo.lt/v1/places");
                     // GET FORECAST FOR TODAY
                     var currentDate = DateOnly.FromDateTime(DateTime.Now).ToString();
 
-                    if (currentDate == responseDatas.forecastTimestamps[i].ForecastTimeUtc.Substring(0, 10))
+                    if (currentDate == forecastTimeStamp)
                     {
                         Console.WriteLine(forecastMessage);
                     }
@@ -88,7 +82,7 @@ var httpResponse = await httpClient.GetAsync("https://api.meteo.lt/v1/places");
                     // GET FORECAST FOR TOMOROW
                     var tomorowDate = DateOnly.FromDateTime(DateTime.Now.AddDays(1)).ToString();
 
-                    if (tomorowDate == responseDatas.forecastTimestamps[i].ForecastTimeUtc.Substring(0, 10))
+                    if (tomorowDate == forecastTimeStamp)
                     {
                         Console.WriteLine(forecastMessage);
                     }
@@ -98,7 +92,7 @@ var httpResponse = await httpClient.GetAsync("https://api.meteo.lt/v1/places");
                     // GET FORECAST FOR TOMOROW
                     var dateAfterTomorow = DateOnly.FromDateTime(DateTime.Now.AddDays(2)).ToString();
 
-                    if (dateAfterTomorow == responseDatas.forecastTimestamps[i].ForecastTimeUtc.Substring(0, 10))
+                    if (dateAfterTomorow == forecastTimeStamp)
                     {
                         Console.WriteLine(forecastMessage);
                     }
@@ -111,10 +105,4 @@ var httpResponse = await httpClient.GetAsync("https://api.meteo.lt/v1/places");
                     break;
             }
         }
-    }    
-//}
-
-
-
-
-
+   

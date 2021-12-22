@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Meteo.Meteo.Services
 {
-    public class MeteoService
+    public class MeteoService : IMeteoService
     {
         private readonly HttpClient _httpClient;
         private const string PlacesUrl = "https://api.meteo.lt/v1/places/";
@@ -30,16 +30,30 @@ namespace Meteo.Meteo.Services
                 var place = JsonConvert.DeserializeObject<Place>(contentString);
 
                 return place;
-
             }
             else
+            {
+                return null;
+            }
+        }
 
-            return null;
+        public async Task<PlaceForecast?> GetPlaceForecast(Place filtredPlace)
+        {
+            var httpResponse = await _httpClient.GetAsync($"{filtredPlace.Code}/forecasts/long-term");
 
-            //public List<ForecastTimestamps> GetForecastTimestamps()
-            //{
+            if (httpResponse.IsSuccessStatusCode)
+            {
+                var contentString = await httpResponse.Content.ReadAsStringAsync();
 
-            //}
+                var forecast = JsonConvert.DeserializeObject<PlaceForecast>(contentString);
+
+                return forecast;
+
+            } else
+            {
+                return null;
+            }
+                    
         }
     }
 }
