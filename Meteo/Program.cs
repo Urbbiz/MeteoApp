@@ -3,17 +3,20 @@ using Meteo.Meteo.Model;
 using Meteo.Meteo.IO;
 using Meteo.Meteo.Helper;
 using Meteo.Meteo.Validation;
+using Meteo.Meteo.Services;
 using Newtonsoft.Json;
 
 var Input = new Input();
 
-var InputValidation = new InputValidation(Input);
+var inputValidation = new InputValidation(Input);
 
-var StringModifier = new StringModifier(Input);
+var meteoService = new MeteoService();
 
 var httpClient = new HttpClient();
 
 var httpResponse = await httpClient.GetAsync("https://api.meteo.lt/v1/places");
+
+
 
 // Get all places
 if (httpResponse.IsSuccessStatusCode)
@@ -27,15 +30,19 @@ if (httpResponse.IsSuccessStatusCode)
         Console.WriteLine(Message.enterPlace);
 
         string inputString = Input.GetInputString();
+        
 
-        while (InputValidation.IsOnlyLetters(inputString) == false)
+        while (inputValidation.IsOnlyLetters(inputString) == false)
         {
             Console.WriteLine(Message.onlyLettersValid);
 
             inputString = Input.GetInputString();
         }
+       
 
-        string placeInput = StringModifier.GetUppercaseFirst(inputString);
+        string placeInput = inputString.GetUppercaseFirst();
+
+        var place = await meteoService.GetPlaceByName(placeInput);
 
         var contentString = await httpResponse.Content.ReadAsStringAsync();
 
@@ -56,13 +63,13 @@ if (httpResponse.IsSuccessStatusCode)
     {
         var contentString = await httpResponse.Content.ReadAsStringAsync();
 
-        var responseDatas = JsonConvert.DeserializeObject<ResponseData>(contentString);
+        var responseDatas = JsonConvert.DeserializeObject<PlaceForecast>(contentString);
 
         Console.WriteLine(Message.switchOptions);
 
         string switchInput = Input.GetInputString();
         
-        while (InputValidation.IsNumberRange1To4(switchInput) == false)
+        while (inputValidation.IsNumberRange1To4(switchInput) == false)
         {
             Console.WriteLine(Message.switchInputInvalid);
 

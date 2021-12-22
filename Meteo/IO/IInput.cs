@@ -9,6 +9,6 @@ namespace Meteo.Meteo.IO
     internal interface IInput
     {
 
-        string GetInputString();
+        string? GetInputString();
     }
 }

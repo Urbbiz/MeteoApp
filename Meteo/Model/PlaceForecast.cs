@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Meteo.Meteo.Model
 {
-    internal class ResponseData
+    public class PlaceForecast
     {
          public Place? Place { get; set; }
         public List<ForecastTimestamps>? forecastTimestamps{ get; set; }

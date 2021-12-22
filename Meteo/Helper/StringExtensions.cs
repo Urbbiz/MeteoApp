@@ -7,13 +7,10 @@ using Meteo.Meteo.IO;
 
 namespace Meteo.Meteo.Helper
 {
-    internal class StringModifier : IStringModifier
+    public static class StringExtensions
     {
-        public StringModifier(Input input)
-        {
-
-        }
-       public string GetUppercaseFirst(string inputString)
+       
+       public static string GetUppercaseFirst(this string inputString)
         {
             if (string.IsNullOrEmpty(inputString))
                 return string.Empty;

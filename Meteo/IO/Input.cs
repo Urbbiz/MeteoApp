@@ -9,9 +9,9 @@ namespace Meteo.Meteo.IO
 {
     internal class Input : IInput
     {
-        public string GetInputString()
+        public string? GetInputString()
         {
-            string inputString = Console.ReadLine();
+            string? inputString = Console.ReadLine();
             
             return inputString;
         }
