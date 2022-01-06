@@ -16,6 +16,19 @@ This project is for educational porpuses only.
 - REST API https://api.meteo.lt/
 - validations
 
+## App Forecast
+ - Today
+ - Tomorrow
+ - Day after tomorrow
+ - For 5 days in a row
+
+
+## Installation and Usage
+
+- Download (.zip file) or clone this repository.
+- Run the Application.
+- Enter the command to console.
+
 
 ## Authors
 [Andrius](https://github.com/urbbiz)
